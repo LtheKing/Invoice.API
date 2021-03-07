@@ -12,13 +12,29 @@ namespace Invoice.API.Controllers
     [ApiController]
     public class InvoiceController : ControllerBase
     {
-        [HttpGet("GetAll")]
-        public IActionResult TestApi()
+        [HttpGet("GetAll")] //API untuk mendapatkan semua data Invoice yang sudah disubmit
+        public IActionResult GetAllInvoice()
         {
             var response = new GenericResponseModel<List<InvoiceModel>>();
             var bl = new InvoiceBL();
 
             response = bl.GetAll();
+
+            if (!response.Status)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+
+        [HttpGet("GetAllProps")] //API untuk mendapatkan semua properti yang dibutuhkan UI
+        public IActionResult TestApi()
+        {
+            var response = new GenericResponseModel<InvoicePropertyModel>();
+            var bl = new InvoiceBL();
+
+            response = bl.GetAllProps();
 
             if (!response.Status)
             {

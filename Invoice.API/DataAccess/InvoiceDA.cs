@@ -22,5 +22,87 @@ namespace Invoice.API.DataAccess
 
             return response;
         }
+
+        public InvoicePropertyModel GetAllProps(ref string msg)
+        {
+            var response = new InvoicePropertyModel();
+
+            var queryCustomer = string.Format(@"SELECT * FROM KLBCustomer");
+            var msgCustomer = string.Empty;
+            var dtCustomers = ExecuteQueryWithParam(queryCustomer, new List<SqlParameter>(), ref msgCustomer);
+            var customers = DataTableHelper.DataTableToList<CustomerModel>(dtCustomers);
+
+            if (msgCustomer.Length > 0) {
+                msg = msgCustomer;
+                return response;
+            }
+
+            var querypo = string.Format(@"SELECT * FROM KLBCustomerPO");
+            var msgpo = string.Empty;
+            var dtPos = ExecuteQueryWithParam(querypo, new List<SqlParameter>(), ref msgpo);
+            var pos = DataTableHelper.DataTableToList<CustomerPOModel>(dtPos);
+
+            if (msgpo.Length > 0)
+            {
+                msg = msgpo;
+                return response;
+            }
+
+            var queryCurrency = string.Format(@"SELECT * FROM KLBCurrency");
+            var msgCurrency = string.Empty;
+            var dtCurrencys = ExecuteQueryWithParam(queryCurrency, new List<SqlParameter>(), ref msgCurrency);
+            var currencies = DataTableHelper.DataTableToList<CurrencyModel>(dtCurrencys);
+
+            if (msgCurrency.Length > 0)
+            {
+                msg = msgCurrency;
+                return response;
+            }
+
+            var queryLanguage = string.Format(@"SELECT * FROM KLBLanguage");
+            var msgLanguage = string.Empty;
+            var dtLanguages = ExecuteQueryWithParam(queryLanguage, new List<SqlParameter>(), ref msgLanguage);
+            var language = DataTableHelper.DataTableToList<LanguageModel>(dtLanguages);
+
+            if (msgLanguage.Length > 0)
+            {
+                msg = msgLanguage;
+                return response;
+            }
+
+            var queryNoInvoice = string.Format(@"
+                DECLARE 
+                @newInvoiceNo VARCHAR(10),
+                @oldInvoiceNo VARCHAR(10),
+                @num VARCHAR(6),
+                @seq INT;
+
+                BEGIN TRY
+
+                    SET @oldInvoiceNo = (select TOP 1 NoInvoice FROM KLBInvoice ORDER BY NoInvoice DESC);
+                    SET @num = (select SUBSTRING(@oldInvoiceNo, 5, len(@oldInvoiceNo)))
+                    SET @seq = (select cast(@num as int)) + 1
+                    
+                        set @newInvoiceNo = CASE WHEN (LEN(@seq) > 0) and (LEN(@seq) < 2) THEN 'INV-00' + CAST(@seq AS VARCHAR(5))
+                                            WHEN (LEN(@seq) > 1) and (LEN(@seq) < 3) THEN 'INV-0' + CAST(@seq AS VARCHAR(5))
+                                            WHEN (LEN(@seq) > 2) and (LEN(@seq) < 4) THEN 'INV-' + CAST(@seq AS VARCHAR(5))
+                                            END 
+                        SELECT @newInvoiceNo [NoInvoice]
+                END TRY
+
+                BEGIN CATCH
+                    SELECT @@ERROR
+                END CATCH   
+                ");
+            var noInvoice = ExecuteScalar(queryNoInvoice);
+
+            response.Customers = customers;
+            response.CustomerPOs = pos;
+            response.Currencies = currencies;
+            response.Language = language;
+            response.NoInvoice = noInvoice;
+
+            return response;
+        }
     }
 }
