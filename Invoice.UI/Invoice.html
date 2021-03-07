@@ -84,15 +84,16 @@
             <div class="form-group row">
               <div class="col">
                 <label for="Recipient">To</label>
-                  <select class="form-control mb-2" id="select_customers">
+                  <select class="form-control mb-2" id="select_customers" onchange="onCustomerChange()">
                   </select>
-                <textarea class="form-control" id="txt_recipient" name="txtRecipient" rows="4" cols="50"></textarea>
+                <textarea class="form-control" id="txt_address" name="Address" rows="4" cols="50"></textarea>
               </div>
               <div class="col-md-4">
                 <label for="NomorPO">Purchase Order Number</label>
-                  <select class="form-control mb-2" id="dropdown_poNumber">
+                  <!-- <select class="form-control mb-2" id="dropdown_poNumber">
                     <option>PO-01</option>
-                  </select>
+                  </select> -->
+                  <input type="text" name="PONumber" id="txt_poNumber" data-toggle="modal" data-target="#exampleModalScrollable" onClick="getPOValue()">
               </div>
             </div>
 
@@ -143,6 +144,61 @@
               <input type="text" name="Total" id="txt_total" class="form-control mt-3">
             </div>
           </div>
+      </div>
+
+      <!-- Button trigger modal -->
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalScrollable">
+        Launch demo modal
+      </button>
+
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalScrollableTitle">Modal title</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <table class="table" id="exampleTable">
+                <thead id="exampleThead">
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">First</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Handle</th>
+                  </tr>
+                </thead>
+                <tbody id="exampleTBody">
+                  <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">2</th>
+                    <td>Jacob</td>
+                    <td>Thornton</td>
+                    <td>@fat</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>Larry</td>
+                    <td>the Bird</td>
+                    <td>@twitter</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
       </div>
 
     </div>
@@ -223,7 +279,7 @@
     var el = document.getElementById('select_customers');
     cr.forEach(function(key, index) {
       var opt = document.createElement("option");
-      opt.value = key;
+      opt.value = cust[index].id;
       opt.innerHTML = key;
       el.appendChild(opt);
     });
@@ -232,6 +288,35 @@
   function setNoInvoice() {
     var jsonData = JSON.parse(localStorage.data);
     document.getElementById('txt_noInvoice').value = jsonData.value.noInvoice;
+  }
+
+  function onCustomerChange() {
+    var jsonData = JSON.parse(localStorage.data);
+    var cust = jsonData.value.customers;
+    var newValue = document.getElementById('select_customers').value;
+    var adr = cust.filter(a => a.id == parseInt(newValue));
+    document.getElementById('txt_address').value = adr[0].address;
+  }
+
+  function getPOValue() {
+    debugger;
+      var table = document.getElementsByTagName("table")[0];
+      var tbody = table.getElementsByTagName("tbody")[0];
+      tbody.onclick = function (e) {
+      e = e || window.event;
+      var data = [];
+      var target = e.srcElement || e.target;
+      while (target && target.nodeName !== "TR") {
+          target = target.parentNode;
+      }
+      if (target) {
+          var cells = target.getElementsByTagName("td");
+          for (var i = 0; i < cells.length; i++) {
+              data.push(cells[i].innerHTML);
+          }
+      }
+      alert(data);
+      }
   }
 
 </script>
