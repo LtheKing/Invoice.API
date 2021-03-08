@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="invoice.js"></script>
+    <!-- <script src="libs/serializejson.js"></script> -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
@@ -32,148 +33,159 @@
           value="Please Find attached your invoice. Thank you for timely payment"
         />
       </div>
-      <div class="row mt-3">
-          <div class="col-sm-0">
-              <label for="noInvoiceLabel">No Invoice</label>
-              <div class="input-group input-group-sm mb-3">
-                <div class="input-group-prepend">
-                  <span class="input-group-text" id="inputGroup-sizing-sm">#</span>
-                </div>
-                <input
-                  type="text"
-                  class="form-control"
-                  aria-label="Sizing example input"
-                  aria-describedby="inputGroup-sizing-sm"
-                  id="txt_noInvoice"
-                />
-              </div>
-          </div> 
-
-          <div class="col-sm-3 offset-md-2">
-                <div class="form-group">
-                    <label for="language">Language</label>
-                    <select class="form-control" id="select_language">
-                    </select>
-                </div>
-              </div>
-              
-                <div class="col-sm-3">
-                    <div class="form-group">
-                        <label for="currency">Currency</label>
-                        <select class="form-control" id="select_currency">
-                        </select>
-                    </div>
-                </div>
-
-        <hr style="width:100%;text-align:left;margin-left:0">
-
+      <form id="formInvoice" method="post">
         <div class="row mt-3">
-            <div class="form-group row">
-                <div class="col-md-8">
-                  <label for="sender">From</label>
-                    <textarea class="form-control" id="txt_sender" name="txtSender" rows="4" cols="50"></textarea>
-                    <button type="reset" id="btnResetSender" onclick="btnResetSenderOnClick()" class="btn btn-secondary mt-2">Reset</button>
+            <div class="col-sm-0">
+                <label for="noInvoiceLabel">No Invoice</label>
+                <div class="input-group input-group-sm mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">#</span>
+                  </div>
+                  <input
+                    type="text"
+                    class="form-control"
+                    aria-label="Sizing example input"
+                    aria-describedby="inputGroup-sizing-sm"
+                    id="txt_noInvoice"
+                  />
+                </div>
+            </div> 
+
+            <div class="col-sm-3 offset-md-2">
+                  <div class="form-group">
+                      <label for="language">Language</label>
+                      <select class="form-control" id="select_language">
+                      </select>
+                  </div>
+                </div>
+                
+                  <div class="col-sm-3">
+                      <div class="form-group">
+                          <label for="currency">Currency</label>
+                          <select class="form-control" id="select_currency">
+                          </select>
+                      </div>
+                  </div>
+
+          <hr style="width:100%;text-align:left;margin-left:0">
+
+          <div class="row mt-3">
+              <div class="form-group row">
+                  <div class="col-md-8">
+                    <label for="sender">From</label>
+                      <textarea class="form-control" id="txt_sender" name="txtSender" rows="4" cols="50"></textarea>
+                      <button type="reset" id="btnResetSender" onclick="btnResetSenderOnClick()" class="btn btn-secondary mt-2">Reset</button>
+                  </div>
+                  <div class="col-md-4">
+                    <label for="date">Date</label>
+                    <input placeholder="Date" type="date" id="invoice_date" class=" form-control">
+                    <label for="dueDate">Due Date</label>
+                    <input placeholder="Due Date" type="date" id="invoice_dueDate" class=" form-control">
+                  </div>
+              </div>
+
+              <div class="form-group row">
+                <div class="col">
+                  <label for="Recipient">To</label>
+                    <select class="form-control mb-2" id="select_customers" onchange="onCustomerChange()">
+                    </select>
+                  <textarea class="form-control" id="txt_address" name="Address" rows="4" cols="50"></textarea>
                 </div>
                 <div class="col-md-4">
-                  <label for="date">Date</label>
-                  <input placeholder="Date" type="date" id="invoice_date" class=" form-control">
-                  <label for="dueDate">Due Date</label>
-                  <input placeholder="Due Date" type="date" id="invoice_dueDate" class=" form-control">
+                  <label for="NomorPO">Purchase Order Number</label>
+                    <!-- <select class="form-control mb-2" id="dropdown_poNumber">
+                      <option>PO-01</option>
+                    </select> -->
+                    <input type="text" name="PONumber" id="txt_poNumber" data-toggle="modal" data-target="#exampleModalScrollable">
                 </div>
-            </div>
+              </div>
 
-            <div class="form-group row">
+          </div>
+
+          <hr style="width:100%;text-align:left;margin-left:0"> 
+
+          <div class="row mt-3" id="bottomContent0">
+            <div class="col-4">
+              <label for="ContentNameLabel">Name</label>
+              <textarea class="form-control" id="txt_contentName" name="ContentName" rows="4" cols="50"></textarea>
+            </div>
+            <div class="col">
+              <label for="Quantity">Quantity</label>
+              <input type="text" name="Quantity" id="txt_quantity" class="form-control">
+            </div>
+            <div class="col">
+              <label for="ContentName">Rate</label>
+              <input type="text" name="Rate" id="txt_rate" class="form-control">
+              <select class="form-control mt-2" id="select_rate">
+                <option>hour</option>
+                <option>day</option>
+              </select>
+            </div>
+            <div class="col">
+              <label for="Amount">Amount</label>
+              <input type="text" name="Amount" id="txt_amount" class="form-control">
+            </div>
+            <hr style="width:100%;text-align:left;margin-left:0"> 
+          </div>
+
+          <button type="button" id="btnNewLine" onclick="btnNewLineOnClick()" class="btn btn-info mt-2">New Line</button>
+          
+        </div>
+
+        <div class="d-flex justify-content-lg-end">
+            <div class="row">
               <div class="col">
-                <label for="Recipient">To</label>
-                  <select class="form-control mb-2" id="select_customers" onchange="onCustomerChange()">
-                  </select>
-                <textarea class="form-control" id="txt_address" name="Address" rows="4" cols="50"></textarea>
+                <label for="subtotal">Sub Total</label>
+                <div class="input-group">
+                  <input type="text" name="DiscountName" id="txt_discountName" placeholder="Enter Discount" class="form-control mt-4">
+                  <input type="text" name="DiscountPersentation" id="txt_discountPersentation" class="form-control mt-4">
+                </div>
+                <label for="Total" class="mt-4">Total</label>
               </div>
-              <div class="col-md-4">
-                <label for="NomorPO">Purchase Order Number</label>
-                  <!-- <select class="form-control mb-2" id="dropdown_poNumber">
-                    <option>PO-01</option>
-                  </select> -->
-                  <input type="text" name="PONumber" id="txt_poNumber" data-toggle="modal" data-target="#exampleModalScrollable">
+              
+              <div class="col">
+                <input type="text" name="SubTotal" id="txt_subtotal" class="form-control">
+                <input type="text" name="Discount" id="txt_discount" class="form-control mt-3">
+                <input type="text" name="Total" id="txt_total" class="form-control mt-3">
               </div>
             </div>
-
         </div>
 
-        <hr style="width:100%;text-align:left;margin-left:0"> 
-
-        <div class="row mt-3">
-          <div class="col-4">
-            <label for="ContentName">Name</label>
-            <textarea class="form-control" id="txt_contentName" name="ContentName" rows="4" cols="50"></textarea>
-            <button type="button" id="btnNewLine" onclick="btnNewLineOnClick()" class="btn btn-info mt-2">New Line</button>
-          </div>
-          <div class="col">
-            <label for="Quantity">Quantity</label>
-            <input type="text" name="Quantity" id="txt_quantity" class="form-control">
-          </div>
-          <div class="col">
-            <label for="ContentName">Rate</label>
-            <input type="text" name="Rate" id="txt_rate" class="form-control">
-            <select class="form-control mt-2" id="select_rate">
-             <option>hour</option>
-             <option>day</option>
-            </select>
-          </div>
-          <div class="col">
-            <label for="Amount">Amount</label>
-            <input type="text" name="Amount" id="txt_amount" class="form-control">
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true" onload="createDynamicTable()">
+          <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalScrollableTitle">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <div id="listPO"></div>
+              </div>
+              <!-- <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+              </div> -->
+            </div>
           </div>
         </div>
 
-      </div>
-
-      <div class="d-flex justify-content-lg-end">
-          <div class="row">
-            <div class="col">
-              <label for="subtotal">Sub Total</label>
-              <div class="input-group">
-                <input type="text" name="DiscountName" id="txt_discountName" placeholder="Enter Discount" class="form-control mt-4">
-                <input type="text" name="DiscountPersentation" id="txt_discountPersentation" class="form-control mt-4">
-              </div>
-              <label for="Total" class="mt-4">Total</label>
-            </div>
-            
-            <div class="col">
-              <input type="text" name="SubTotal" id="txt_subtotal" class="form-control">
-              <input type="text" name="Discount" id="txt_discount" class="form-control mt-3">
-              <input type="text" name="Total" id="txt_total" class="form-control mt-3">
-            </div>
-          </div>
-      </div>
-
-      <!-- Modal -->
-      <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true" onload="createDynamicTable()">
-        <div class="modal-dialog modal-dialog-scrollable" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalScrollableTitle">Modal title</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <div id="listPO"></div>
-            </div>
-            <!-- <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
-            </div> -->
-          </div>
-        </div>
-      </div>
-
+        <button type="submit" id="btnSave" class="btn btn-success mt-2">Get Form Values</button>
+      </form>
     </div>
   </body>
 </html>
 
 <script>
-  window.onload = setCKEditor();
+  // window.onload = setCKEditor();
+  $('#exampleModalScrollable').on('show.bs.modal', function (event) {
+    createDynamicTable();
+    document.getElementById('listPO').classList.add('table')
+    
+  });
+
   function setCKEditor() {
     ClassicEditor
         .create(document.querySelector('#txt_contentName'))
@@ -182,9 +194,44 @@
         });
   }
 
-  $('#exampleModalScrollable').on('show.bs.modal', function (event) {
-    createDynamicTable();
-    document.getElementById('listPO').classList.add('table')
-    
+  $.fn.serializeObject = function()
+{
+    var o = {};
+    var a = this.serializeArray();
+    $.each(a, function() {
+        if (o[this.name] !== undefined) {
+            if (!o[this.name].push) {
+                o[this.name] = [o[this.name]];
+            }
+            o[this.name].push(this.value || '');
+        } else {
+            o[this.name] = this.value || '';
+        }
+    });
+    return o;
+};
+
+$(function() {
+$("#formInvoice").submit(function(e) {
+    e.preventDefault();
   });
+    $('#btnSave').click(function() {
+    var jsonText = JSON.stringify($('form').serializeObject());
+    console.log(jsonText);
+        // $('#result').text(JSON.stringify($('form').serializeObject()));
+        //  $.ajax({
+        // type: "POST",
+        // url: "<url>",
+        // data: jsonText,
+        // crossDomain: true,
+        // dataType: "text/plain",
+
+        // //if received a response from the server
+        // success: function(response) {
+        //         $("#uploadResponse").append(response);
+        // },
+
+        // });
+    });
+});
 </script>

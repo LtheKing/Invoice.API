@@ -1,3 +1,8 @@
+// var script = document.createElement('script');
+// script.src = 'https://code.jquery.com/jquery-3.5.1.slim.min.js';
+// script.type = 'text/javascript';
+// document.getElementsByTagName('head')[0].appendChild(script);
+
 window.onload = onPageLoaded();
 function onPageLoaded() {
     localStorage.clear();
@@ -34,8 +39,14 @@ function btnResetSenderOnClick() {
     document.getElementById('txt_sender').value = ''
 }
 
+//add new line
 function btnNewLineOnClick() {
-    console.log('new line');
+    var i = 0;
+    var original = document.getElementById('bottomContent' + i);
+    var clone = original.cloneNode(true); // "deep" clone
+    clone.id = "bottomContent" + ++i; // there can only be one element with an ID
+    //clone.onclick = btnNewLineOnClick; // event handlers are not cloned
+    original.parentNode.appendChild(clone);
 }
 
 function onSelectCurrency() {
@@ -155,4 +166,9 @@ function setNomorPO() {
         document.getElementById('txt_poNumber').value = $(this).text();
         $('#exampleModalScrollable').modal('hide');
     });
+}
+
+//content editor on change
+function onContentEditorChange() {
+    
 }
