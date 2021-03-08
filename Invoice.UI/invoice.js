@@ -92,7 +92,7 @@ function onCustomerChange() {
 
 function getPOValue() {
     var table = document.getElementsByTagName("table")[0];
-    var tbody = table.getElementsByTagName("tbody")[0];
+    var tbody = table.getElementsByTagName("tr")[0];
     tbody.onclick = function (e) {
         e = e || window.event;
         var data = [];
@@ -112,7 +112,6 @@ function getPOValue() {
 
 // BEGIN FUNCTION CREATE DYNAMIC TABLE
 function createDynamicTable() {
-    debugger;
     var jsonData = JSON.parse(localStorage.data);
     var data = jsonData.value.customerPOs;
     document.addEventListener('DOMContentLoaded', populate(data), false);
@@ -145,7 +144,15 @@ function populate(json) {
         );
     json.reduce(makeRow, table);
     wrapper.appendChild(table);
+    setNomorPO();
 };
 // END FUNCTION CREATE DYNAMIC TABLE
 
-//event when modal show
+// set value to nomor po input text when table clicked
+function setNomorPO() {
+    $('td').on('click', function (e) {
+        // console.log($(this).text())
+        document.getElementById('txt_poNumber').value = $(this).text();
+        $('#exampleModalScrollable').modal('hide');
+    });
+}
