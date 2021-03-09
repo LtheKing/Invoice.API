@@ -164,5 +164,37 @@ namespace Invoice.API.DataAccess
 
             return true;
         }
+
+        public InvoiceModel GetInvoiceDetail(ref string msg) 
+        {
+            var result = new InvoiceModel();
+            var queryInvoice = string.Format(@"
+                select * from KLBInvoice where id = (select Max(ID) from KLBInvoice)
+            ");
+
+            var dt = ExecuteQueryWithParam(queryInvoice, new List<SqlParameter>(), ref msg);
+
+            if (msg.Length > 0)
+            {
+                return result;
+            }
+
+            result = DataTableHelper.DataTableToList<InvoiceModel>(dt)[0];
+
+            var queryDetail = string.Format(@"
+                select * from KLBInvoiceDetail where InvoiceID = {0}
+            ", result.ID);
+
+            var dt2 = ExecuteQueryWithParam(queryDetail, new List<SqlParameter>(), ref msg);
+
+            if (msg.Length > 0)
+            {
+                return result;
+            }
+            
+            result.InvoiceDetail = DataTableHelper.DataTableToList<InvoiceDetail>(dt2);
+
+            return result;
+        }
     }
 }

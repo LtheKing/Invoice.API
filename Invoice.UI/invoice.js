@@ -299,7 +299,6 @@ function calculateSubTotal(amount) {
 
 //bundling data
 function bundlingData(rawJson) {
-    debugger;
     var data = JSON.parse(rawJson);
     var dataInvoice = {
             "NoInvoice": data.NoInvoice,
@@ -343,5 +342,10 @@ function bundlingData(rawJson) {
         const content = await rawResponse.json();
 
         console.log(content);
+        window.location.href = './Invoice_detail.html'
     })();
+}
+
+function testingRedirect() {
+    window.location.href = './Invoice_detail.html'
 }

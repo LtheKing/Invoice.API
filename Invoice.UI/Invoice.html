@@ -108,7 +108,7 @@
           <div class="row mt-3 multiContent" id="bottomContent0">
             <div class="col-4">
               <label for="ContentNameLabel">Name</label>
-              <textarea class="form-control" id="txt_contentName" name="ContentName" rows="4" cols="50" onchange="calculateAmount()"></textarea>
+              <textarea class="form-control" id="txt_contentName" name="ContentName" rows="4" cols="50" ></textarea>
             </div>
             <div class="col">
               <label for="Quantity">Quantity</label>
@@ -116,7 +116,7 @@
             </div>
             <div class="col">
               <label for="ContentName">Rate</label>
-              <input type="number" name="Rate" id="txt_rate" class="form-control" value=1000.00>
+              <input type="number" name="Rate" id="txt_rate" class="form-control" value=1000.00 onchange="calculateAmount()">
               <select class="form-control mt-2" id="select_rate">
                 <option>hour</option>
                 <option>day</option>

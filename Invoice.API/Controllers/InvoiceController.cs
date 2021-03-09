@@ -59,5 +59,21 @@ namespace Invoice.API.Controllers
 
             return Ok(response);
         }
+
+        [HttpGet("GetNewInvoice")] //API untuk mendapatkan data invoice terbaru
+        public IActionResult GetNewInvoice()
+        {
+            var response = new GenericResponseModel<InvoiceModel>();
+            var bl = new InvoiceBL();
+
+            response = bl.GetInvoiceDetail();
+
+            if (!response.Status)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
     }
 }
