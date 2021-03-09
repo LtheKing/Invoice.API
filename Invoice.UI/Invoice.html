@@ -23,7 +23,7 @@
         <div class="col-1 bg-success rounded text-center text-light">Paid</div>
         <div class="col font-weight-bold">Bill</div>
         <div class="col-md-left">
-          <img id="coverImage" src="../img/clouds.jpg" />
+          <img id="coverImage" src="../img/heartbeat.jpg" />
         </div>
       </div>
       <div class="row">
@@ -182,9 +182,10 @@
 <script>
   // window.onload = setCKEditor();
   $('#exampleModalScrollable').on('show.bs.modal', function (event) {
+    var table = document.getElementsByTagName('table');
+    if (table.length >= 1) return;
     createDynamicTable();
     document.getElementById('listPO').classList.add('table')
-    
   });
 
   function setCKEditor() {
