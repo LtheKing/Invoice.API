@@ -23,7 +23,7 @@
         <div class="col-1 bg-success rounded text-center text-light">Paid</div>
         <div class="col font-weight-bold">Bill</div>
         <div class="col-md-left">
-          <img src="../img/heartbeat.jpg" />
+          <img id="coverImage" src="../img/clouds.jpg" />
         </div>
       </div>
       <div class="row">
@@ -62,7 +62,7 @@
                   <div class="col-sm-3">
                       <div class="form-group">
                           <label for="currency">Currency</label>
-                          <select class="form-control" id="select_currency">
+                          <select class="form-control" id="select_currency" onchange="onCurrencyChange()">
                           </select>
                       </div>
                   </div>
@@ -79,8 +79,10 @@
                   <div class="col-md-4">
                     <label for="date">Date</label>
                     <input placeholder="Date" type="date" id="invoice_date" class=" form-control">
+                    <input type="text" name="hiddenDate" id="hiddenDate" hidden="false" value="immediately">
                     <label for="dueDate">Due Date</label>
                     <input placeholder="Due Date" type="date" id="invoice_dueDate" class=" form-control">
+                    <input type="text" name="hiddenDueDate" id="hiddenDueDate" hidden="true" value="immediately">
                   </div>
               </div>
 
@@ -107,15 +109,15 @@
           <div class="row mt-3 multiContent" id="bottomContent0">
             <div class="col-4">
               <label for="ContentNameLabel">Name</label>
-              <textarea class="form-control" id="txt_contentName" name="ContentName" rows="4" cols="50"></textarea>
+              <textarea class="form-control" id="txt_contentName" name="ContentName" rows="4" cols="50" onchange="calculateAmount()"></textarea>
             </div>
             <div class="col">
               <label for="Quantity">Quantity</label>
-              <input type="number" name="Quantity" id="txt_quantity" class="form-control c_qty" value="0">
+              <input type="number" name="Quantity" id="txt_quantity" class="form-control" value="0" onchange="calculateAmount()">
             </div>
             <div class="col">
               <label for="ContentName">Rate</label>
-              <input type="number" name="Rate" id="txt_rate" class="form-control c_rate" value="1000">
+              <input type="number" name="Rate" id="txt_rate" class="form-control" value=1000.00>
               <select class="form-control mt-2" id="select_rate">
                 <option>hour</option>
                 <option>day</option>
@@ -123,7 +125,7 @@
             </div>
             <div class="col">
               <label for="Amount">Amount</label>
-              <input type="number" name="Amount" id="txt_amount" class="form-control c_amount">
+              <input type="number" name="Amount" id="txt_amount" class="form-control c_amount" onchange="calculateSubTotal()">
             </div>
             <hr style="width:100%;text-align:left;margin-left:0">
           </div>
@@ -138,14 +140,14 @@
                 <label for="subtotal">Sub Total</label>
                 <div class="input-group">
                   <input type="text" name="DiscountName" id="txt_discountName" placeholder="Enter Discount" class="form-control mt-4">
-                  <input type="text" name="DiscountPersentation" id="txt_discountPersentation" class="form-control mt-4">
+                  <input type="text" name="DiscountPersentation" id="txt_discountPersentation" class="form-control mt-4" onchange="calculateBlokBawah()">
                 </div>
                 <label for="Total" class="mt-4">Total</label>
               </div>
               
               <div class="col">
                 <input type="number" name="SubTotal" id="txt_subtotal" class="form-control" onchange="calculateBlokBawah()">
-                <input type="number" name="Discount" id="txt_discount" class="form-control mt-3" onchange="calculateBlokBawah()">
+                <input type="number" name="Discount" id="txt_discount" class="form-control mt-3">
                 <input type="number" name="Total" id="txt_total" class="form-control mt-3" readonly="true">
               </div>
             </div>
@@ -234,4 +236,8 @@ $("#formInvoice").submit(function(e) {
         // });
     });
 });
+
+var today = new Date().toISOString().split('T')[0];
+document.getElementById("invoice_date").setAttribute('min', today);
+document.getElementById("invoice_dueDate").setAttribute('min', today);
 </script>

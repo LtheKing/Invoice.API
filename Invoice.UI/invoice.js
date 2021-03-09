@@ -67,7 +67,7 @@ function btnNewLineOnClick() {
             </div>
             <div class="col">
               <label for="ContentName">Rate</label>
-              <input type="number" name="Rate" id="txt_rate" class="form-control c_rate" value="1000">
+              <input type="number" name="Rate" id="txt_rate" class="form-control c_rate" value=1000.00>
               <select class="form-control mt-2" id="select_rate">
                 <option>hour</option>
                 <option>day</option>
@@ -89,6 +89,15 @@ function btnNewLineOnClick() {
             var qty = $(e.target).closest('.induk').find('.c_qty').val();
             var field_amount = $(e.target).closest('.induk').find('.c_amount')
             calculateAmountMulti(qty, e.target.value, field_amount)
+        });
+
+        $('.c_amount').change(function (e) {
+            var sum = 0;
+            $('.induk .c_amount').each(function (a, b) {
+                sum += parseInt(b.value)
+            })
+
+            calculateSubTotal(sum);
         })
     }
 }
@@ -143,6 +152,23 @@ function onCustomerChange() {
     var newValue = document.getElementById('select_customers').value;
     var adr = cust.filter(a => a.id == parseInt(newValue));
     document.getElementById('txt_address').value = adr[0].address;
+    $('#coverImage').attr('src', adr[0].logoURl);
+}
+
+function onCurrencyChange() {
+    var lang = $('#select_currency').val();
+
+    if (lang == 'United States Dollar - USD') {
+        var nilai = 2000;
+        var res = nilai.toFixed(2);
+        $('#txt_rate').val(res);
+    } else {
+        var nilai = 1000;
+        var res = nilai.toFixed(2);
+        $('#txt_rate').val(res);
+    }
+
+    $('.induk').remove();
 }
 
 function getPOValue() {
@@ -219,13 +245,18 @@ function onContentEditorChange() {
 
 //calculate initial amount
 function calculateAmount() {
-    
+    var qty = $('#txt_quantity').val();
+    var rate = $('#txt_rate').val();
+    var tot = qty * rate;
+    $('#txt_amount').val(tot.toFixed(2));
+    $('#txt_amount').change();
 }
 
 //calculate amount multi
 function calculateAmountMulti(qty, rate, field_amount) {
     var tot = qty * rate;
-    field_amount.val(tot);
+    field_amount.val(tot.toFixed(2));
+    $('.c_amount').change();
 }
 
 //calculate total
@@ -233,7 +264,7 @@ function calculateTotal() {
     var disc = document.getElementById('txt_discount').value;
     var subTot = document.getElementById('txt_subtotal').value;
     var tot = subTot - disc;
-    document.getElementById('txt_total').value = tot;
+    document.getElementById('txt_total').value = tot.toFixed(2);
 }
 
 //calculate diskon
@@ -243,11 +274,25 @@ function calculateDiskon() {
     var subTot = document.getElementById('txt_subtotal').value;
 
     var res = discPersen * subTot;
-    document.getElementById('txt_discount').value = res;
+    document.getElementById('txt_discount').value = res.toFixed(2);
 }
 
 //calculate blok bawah
 function calculateBlokBawah() {
     calculateDiskon();
     calculateTotal();
+}
+
+//calculate subtotal
+function calculateSubTotal(amount) {
+    var subtot = 0;
+    var firstAmount = parseInt($('#txt_amount').val());
+    if (typeof(amount) !== 'undefined') {
+        subtot += (firstAmount + amount);
+        $('#txt_subtotal').val(subtot.toFixed(2));
+        $('#txt_subtotal').change();
+    } else {
+        $('#txt_subtotal').val(firstAmount.toFixed(2));
+        $('#txt_subtotal').change();
+    }
 }
