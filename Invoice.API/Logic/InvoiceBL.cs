@@ -62,5 +62,32 @@ namespace Invoice.API.Logic
 
             return response;
         }
+
+        public GenericResponseModel<bool> InsertInvoice(InvoiceModel data)
+        {
+            var response = new GenericResponseModel<bool>();
+
+            try
+            {
+                string msg = string.Empty;
+                var da = new InvoiceDA();
+                response.Value = da.InsertInvoice(data, ref msg);
+
+                if (!response.Value)
+                {
+                    response.ErrorMessage = "Failed Insert Invoice";
+                    response.WarningMessage = msg;
+                    return response;
+                }
+
+                response.Status = true;
+            }
+            catch (Exception ex)
+            {
+                response.ErrorMessage = ex.ToString();
+            }
+
+            return response;
+        }
     }
 }

@@ -47,6 +47,7 @@
                     aria-label="Sizing example input"
                     aria-describedby="inputGroup-sizing-sm"
                     id="txt_noInvoice"
+                    name="NoInvoice"
                   />
                 </div>
             </div> 
@@ -73,25 +74,23 @@
               <div class="form-group row">
                   <div class="col-md-8">
                     <label for="sender">From</label>
-                      <textarea class="form-control" id="txt_sender" name="txtSender" rows="4" cols="50"></textarea>
+                      <textarea class="form-control" id="txt_sender" name="Sender" rows="4" cols="50"></textarea>
                       <button type="reset" id="btnResetSender" onclick="btnResetSenderOnClick()" class="btn btn-secondary mt-2">Reset</button>
                   </div>
                   <div class="col-md-4">
                     <label for="date">Date</label>
-                    <input placeholder="Date" type="date" id="invoice_date" class=" form-control">
-                    <input type="text" name="hiddenDate" id="hiddenDate" hidden="false" value="immediately">
+                    <input placeholder="Date" type="date" id="invoice_date" name="Date" class=" form-control">
                     <label for="dueDate">Due Date</label>
-                    <input placeholder="Due Date" type="date" id="invoice_dueDate" class=" form-control">
-                    <input type="text" name="hiddenDueDate" id="hiddenDueDate" hidden="true" value="immediately">
+                    <input placeholder="Due Date" type="date" id="invoice_dueDate" name="DueDate" class=" form-control">
                   </div>
               </div>
 
               <div class="form-group row">
                 <div class="col">
                   <label for="Recipient">To</label>
-                    <select class="form-control mb-2" id="select_customers" onchange="onCustomerChange()">
+                    <select class="form-control mb-2" id="select_customers" name="Customer" onchange="onCustomerChange()">
                     </select>
-                  <textarea class="form-control" id="txt_address" name="Address" rows="4" cols="50"></textarea>
+                  <textarea class="form-control" id="txt_address" name="CustomerAddress" rows="4" cols="50"></textarea>
                 </div>
                 <div class="col-md-4">
                   <label for="NomorPO">Purchase Order Number</label>
@@ -174,7 +173,7 @@
           </div>
         </div>
 
-        <button type="submit" id="btnSave" class="btn btn-success mt-2">Get Form Values</button>
+        <button type="submit" id="btnSave" class="btn btn-success mt-2">Save</button>
       </form>
     </div>
   </body>
@@ -219,21 +218,7 @@ $("#formInvoice").submit(function(e) {
   });
     $('#btnSave').click(function() {
     var jsonText = JSON.stringify($('form').serializeObject());
-    console.log(jsonText);
-        // $('#result').text(JSON.stringify($('form').serializeObject()));
-        //  $.ajax({
-        // type: "POST",
-        // url: "<url>",
-        // data: jsonText,
-        // crossDomain: true,
-        // dataType: "text/plain",
-
-        // //if received a response from the server
-        // success: function(response) {
-        //         $("#uploadResponse").append(response);
-        // },
-
-        // });
+    bundlingData(jsonText);
     });
 });
 

@@ -296,3 +296,52 @@ function calculateSubTotal(amount) {
         $('#txt_subtotal').change();
     }
 }
+
+//bundling data
+function bundlingData(rawJson) {
+    debugger;
+    var data = JSON.parse(rawJson);
+    var dataInvoice = {
+            "NoInvoice": data.NoInvoice,
+            "Sender": data.Sender,
+            "Customer": data.Customer,
+            "CustomerAddress": data.CustomerAddress,
+            "Date": data.Date,
+            "DueDate": data.DueDate,
+            "PONumber": data.PONumber,
+            "SubTotal": data.SubTotal,
+            "DiscountName": data.DiscountName,
+            "DiscountPersentation": parseInt(data.DiscountPersentation),
+            "Discount": data.Discount,
+            "Total": data.Total,
+            "InvoiceDetail": []
+    };
+
+
+    var detailInvoice = []
+    var cnLength = data.ContentName.length
+
+    if (cnLength <= 0) return;
+    data.ContentName.forEach(function (a, index) {
+        dataInvoice.InvoiceDetail.push({
+            ContentName: a,
+            Quantity: data.Quantity[index],
+            Rate: data.Rate[index],
+            Amount: data.Amount[index]
+        })
+    });
+
+    (async () => {
+        const rawResponse = await fetch('https://localhost:5001/api/Invoice/InsertInvoice', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataInvoice)
+        });
+        const content = await rawResponse.json();
+
+        console.log(content);
+    })();
+}

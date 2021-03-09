@@ -29,12 +29,28 @@ namespace Invoice.API.Controllers
         }
 
         [HttpGet("GetAllProps")] //API untuk mendapatkan semua properti yang dibutuhkan UI
-        public IActionResult TestApi()
+        public IActionResult GetAllProps()
         {
             var response = new GenericResponseModel<InvoicePropertyModel>();
             var bl = new InvoiceBL();
 
             response = bl.GetAllProps();
+
+            if (!response.Status)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
+
+        [HttpPost("InsertInvoice")] //API untuk menambahkan invoice baru
+        public IActionResult InsertInvoice([FromBody] InvoiceModel data)
+        {
+            var response = new GenericResponseModel<bool>();
+            var bl = new InvoiceBL();
+
+            response = bl.InsertInvoice(data);
 
             if (!response.Status)
             {

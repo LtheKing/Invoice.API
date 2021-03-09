@@ -104,5 +104,65 @@ namespace Invoice.API.DataAccess
 
             return response;
         }
+
+        public bool InsertInvoice (InvoiceModel data, ref string msg) 
+        {
+            var queryInvoiceDetail = string.Empty;
+
+            foreach (var item in data.InvoiceDetail)
+            {
+                queryInvoiceDetail += string.Format(@"
+
+                    INSERT INTO KLBInvoiceDetail(InvoiceID, ContentName, Quantity, Rate, Amount)
+                                                VALUES(@newId, '{0}', {1}, {2}, {3})
+
+                ", item.ContentName, item.Quantity, item.Rate, item.Amount);
+            }
+
+            var param = new List<SqlParameter>()
+            {
+                new SqlParameter() { ParameterName = "@NoInvoice", Value = data.NoInvoice},
+                new SqlParameter() { ParameterName = "@Sender", Value = data.Sender},
+                new SqlParameter() { ParameterName = "@Customer", Value = data.Customer},
+                new SqlParameter() { ParameterName = "@CustomerAddress", Value = data.CustomerAddress},
+                new SqlParameter() { ParameterName = "@Date", Value = data.Date},
+                new SqlParameter() { ParameterName = "@DueDate", Value = data.DueDate},
+                new SqlParameter() { ParameterName = "@PONumber", Value = data.PONumber},
+                new SqlParameter() { ParameterName = "@SubTotal", Value = data.SubTotal},
+                new SqlParameter() { ParameterName = "@DiscountName", Value = data.DiscountName},
+                new SqlParameter() { ParameterName = "@DiscountPersentation", Value = data.DiscountPersentation},
+                new SqlParameter() { ParameterName = "@Discount", Value = data.Discount},
+                new SqlParameter() { ParameterName = "@Total", Value = data.Total},
+
+            };
+            var query = string.Format(@"
+                DECLARE @newId INT
+                BEGIN TRY
+                INSERT INTO KLBInvoice (NoInvoice, Sender, Customer, CustomerAddress,
+						Date, DueDate, PONumber, SubTotal, DiscountName,
+						DiscountPersentation, Discount, Total)
+                VALUES (@NoInvoice, @Sender, @Customer, @CustomerAddress,
+                        @Date, @DueDate, @PONumber, @SubTotal, @DiscountName,
+                        @DiscountPersentation, @Discount, @Total) 
+
+                        SET @newId = @@IDENTITY
+                {0}
+
+                SELECT 'COMPLETE'
+                END TRY
+
+                BEGIN CATCH
+                    SELECT @@ERROR
+                END CATCH
+            ", queryInvoiceDetail);
+
+            var result = ExecuteQueryWithParam(query, param, ref msg);
+
+            if (msg.Length > 0) {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

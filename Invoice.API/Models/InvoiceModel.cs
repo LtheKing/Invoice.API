@@ -15,10 +15,19 @@ namespace Invoice.API.Models
         public Nullable<DateTime> Date { get; set; }
         public Nullable<DateTime> DueDate { get; set; }
         public string PONumber { get; set; }
-        public decimal SubTotal { get; set; }
+        public string SubTotal { get; set; }
         public string DiscountName { get; set; }
         public int DiscountPersentation { get; set; }
-        public decimal Discount { get; set; }
-        public decimal Total { get; set; }
+        public string Discount { get; set; }
+        public string Total { get; set; }
+        public List<InvoiceDetail> InvoiceDetail { get; set; }
+    }
+
+    public class InvoiceDetail {
+        public int InvoiceID { get; set; }
+        public string ContentName { get; set; }
+        public string Quantity { get; set; }
+        public string Rate { get; set; }
+        public string Amount { get; set; }
     }
 }
